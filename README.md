@@ -1,6 +1,6 @@
 # Beardley's Diablo Orbs – Classic
 
-**This project was vibe-coded.** The TBC Anniversary update was implemented with AI-assisted editing against the in-game API and Blizzard interface code. Expect rough edges; reports and patches welcome.
+**This project was vibe-coded.** The TBC Anniversary update was implemented with AI-assisted editing against the in-game API and Blizzard interface code. In practice it runs smoothly; bug reports and patches are welcome.
 
 ---
 
