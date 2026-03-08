@@ -1,5 +1,88 @@
-# Beardley-s-Diablo-Orbs-Classic
-A WoW UI overhaul for WoW Classic
+# Beardley's Diablo Orbs – Classic
 
-Works now like a charm.
-If there are some bugs feel free to report em <3
+**This project was vibe-coded.** The TBC Anniversary update was implemented with AI-assisted editing against the in-game API and Blizzard interface code. Expect rough edges; reports and patches welcome.
+
+---
+
+A WoW UI overhaul for **WoW Classic** (including the TBC Anniversary client). Diablo-style orbs for health/power, reworked action bars, and repositioned default UI elements.
+
+- **Original addon:** [Kulturnilpferd/BeardleysDiabloOrbsClassic](https://github.com/Kulturnilpferd/BeardleysDiabloOrbsClassic) (c)2019 Kulturnilpferd  
+- **This fork:** Updated for the **TBC Anniversary** release (Interface 11200).
+
+---
+
+## Changes for TBC Anniversary (this update)
+
+All edits target the new TBC Anniversary build. Summary of what was changed:
+
+### Addon metadata (`BeardleysDiabloOrbsClassic.toc`)
+- **Interface:** Set to `11200` for the Anniversary client.
+- **Notes:** Clarified “for Classic WoW (retail)” to match the launcher/client.
+
+### Experience & reputation bars
+- **Legacy clients:** Still supports `MainMenuExpBar` and `ReputationWatchBar` when present.
+- **Anniversary client:** Uses the unified status bar system:
+  - `StatusTrackingBarManager` – primary handler for XP/rep bar.
+  - `MainStatusTrackingBarContainer` – fallback when the manager name differs.
+- Positioning and scaling (including `handleExpReputationBars()`) updated so the bar sits correctly with the new art and action bar layout.
+
+### Action bar & paging
+- **Page number:** Support for Anniversary’s `MainActionBar` and `MainActionBar.ActionBarPageNumber`; hides or zeros the page number text instead of relying on older `MainMenuBarPageNumber` / `MainMenuBarArtFrame.PageNumber`.
+- **Page buttons:** `ActionBarUpButton` / `ActionBarDownButton` resolved via `MainActionBar.ActionBarPageNumber` when the top-level names differ.
+- **Multi-bars:** `VerticalMultiBarsContainer` hooked for the Anniversary layout where used.
+
+### Casting bar
+- **Frame name:** Uses `PlayerCastingBarFrame` when present (Anniversary), otherwise falls back to `CastingBarFrame`.
+
+### Micro buttons & bags
+- **Guild:** `GuildMicroButton` (Guild & Communities) supported alongside or instead of `SocialsMicroButton`.
+- **Help:** `HelpOpenWebTicketButton` included for positioning and scale where it exists.
+- **Keyring:** All references guarded with `if (KeyRingButton)` for clients that have it.
+
+### Stance bar
+- **Extra buttons:** `StanceButton7` and `StanceButton8` supported for specs with more auras (e.g. Paladin) on the Anniversary client.
+
+### General
+- **Frame existence checks:** All references to Blizzard frames wrapped in `if (frame)` so the addon degrades cleanly on older or differently built clients.
+- **Events & scripts:** Hooks and `OnEvent` handlers updated to use `StatusTrackingBarManager` / `MainStatusTrackingBarContainer` / `VerticalMultiBarsContainer` where appropriate.
+
+---
+
+## API / reference (where the “dump” lives)
+
+The game’s interface code and API documentation live under the WoW install. On Windows the addon folder is typically:
+
+`C:\Program Files (x86)\World of Warcraft\_anniversary_\Interface\AddOns\BeardleysDiabloOrbsClassic`
+
+**WSL path (same machine):**
+
+```text
+/mnt/c/Program Files (x86)/World of Warcraft/_anniversary_/
+```
+
+Useful subfolders for API and UI reference:
+
+| Path (under `_anniversary_/`) | Description |
+|------------------------------|-------------|
+| `BlizzardInterfaceCode/Interface/AddOns/Blizzard_APIDocumentation/` | In-game API documentation addon (Base, Fields, Functions, Systems, Tables, Events). |
+| `BlizzardInterfaceCode/Interface/AddOns/Blizzard_APIDocumentationGenerated/` | Generated frame/API docs (e.g. `SimpleFrameAPIDocumentation.lua`, status bars, models). |
+| `BlizzardInterfaceCode/Interface/AddOns/Blizzard_FrameXML/` | Blizzard UI XML and Lua (action bars, main menu, status bars, etc.). |
+
+There is no single “API dump” file; the above addons are the authoritative reference for frame names, events, and API used in this update.
+
+---
+
+## Install
+
+1. Clone or download this repo into your Classic addons folder as `BeardleysDiabloOrbsClassic`.
+2. Ensure the folder contains `BeardleysDiabloOrbsClassic.toc`, the `.lua`/`.xml`, and the `art` folder.
+3. Restart WoW or enable the addon from the character screen.
+
+Path should look like:
+
+- **Windows:** `…\World of Warcraft\_anniversary_\Interface\AddOns\BeardleysDiabloOrbsClassic\`
+- **WSL:** `…/World of Warcraft/_anniversary_/Interface/AddOns/BeardleysDiabloOrbsClassic/`
+
+---
+
+If something’s broken or a frame name changed again, open an issue and mention your client (e.g. TBC Anniversary, build/interface version). <3

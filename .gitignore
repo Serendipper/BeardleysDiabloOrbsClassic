@@ -1,0 +1,5 @@
+# Editor / tooling
+.cursor/
+
+# Repo setup instructions (local use only)
+GITHUB_SETUP.md
