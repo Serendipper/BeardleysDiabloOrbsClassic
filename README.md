@@ -46,5 +46,6 @@ All edits target the new TBC Anniversary build. Summary of what was changed:
 - **Frame existence checks:** All references to Blizzard frames wrapped in `if (frame)` so the addon degrades cleanly on older or differently built clients.
 - **Events & scripts:** Hooks and `OnEvent` handlers updated to use `StatusTrackingBarManager` / `MainStatusTrackingBarContainer` / `VerticalMultiBarsContainer` where appropriate.
 ---
+Works now like a charm.
 
 If something’s broken or a frame name changed again, open an issue and mention your client (e.g. TBC Anniversary, build/interface version). <3
