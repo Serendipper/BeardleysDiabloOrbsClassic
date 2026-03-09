@@ -1,0 +1,6 @@
+# Blizzard interface dump — copyrighted; keep local only
+BlizzardInterfaceCode/
+BlizzardInterfaceArt/
+
+# Cursor / IDE project data
+.cursor/
