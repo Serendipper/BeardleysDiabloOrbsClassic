@@ -9,6 +9,8 @@ A WoW UI overhaul for **WoW Classic** (including the TBC Anniversary client). Di
 - **Original addon:** [Kulturnilpferd/BeardleysDiabloOrbsClassic](https://github.com/Kulturnilpferd/BeardleysDiabloOrbsClassic) (c)2019 Kulturnilpferd  
 - **This fork:** Updated for the **TBC Anniversary** release (Interface 11200).
 
+**Maintaining with an AI agent?** See [AGENTS.md](AGENTS.md) for instructions aimed at AI assistants (Cursor, Copilot, etc.) so you can use your own agent to work on this repo with minimal setup.
+
 ---
 
 ## Changes for TBC Anniversary (this update)
