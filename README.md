@@ -7,7 +7,7 @@
 A WoW UI overhaul for **WoW Classic** (including the TBC Anniversary client). Diablo-style orbs for health/power, reworked action bars, and repositioned default UI elements.
 
 - **Original addon:** [Kulturnilpferd/BeardleysDiabloOrbsClassic](https://github.com/Kulturnilpferd/BeardleysDiabloOrbsClassic) (c)2019 Kulturnilpferd  
-- **This fork:** Updated for the **TBC Anniversary** release (Interface 11200).
+- **This fork:** Updated for the **TBC Anniversary** release (Interface 20506).
 
 **Maintaining with an AI agent?** See [AGENTS.md](AGENTS.md) for instructions aimed at AI assistants (Cursor, Copilot, etc.) so you can use your own agent to work on this repo with minimal setup.
 
@@ -18,7 +18,7 @@ A WoW UI overhaul for **WoW Classic** (including the TBC Anniversary client). Di
 All edits target the new TBC Anniversary build. Summary of what was changed:
 
 ### Addon metadata (`BeardleysDiabloOrbsClassic.toc`)
-- **Interface:** Set to `11200` for the Anniversary client.
+- **Interface:** Set to `20506` for the Anniversary client.
 - **Notes:** Clarified “for Classic WoW (retail)” to match the launcher/client.
 
 ### Experience & reputation bars

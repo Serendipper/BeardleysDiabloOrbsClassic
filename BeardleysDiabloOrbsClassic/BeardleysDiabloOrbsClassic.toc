@@ -1,4 +1,4 @@
-## Interface: 11200
+## Interface: 20506
 ## Title: BeardleysDiabloOrbsClassic
 ## Version: 0.1
 ## Notes: Beardley's Diablo Orbs for Classic WoW (retail)
