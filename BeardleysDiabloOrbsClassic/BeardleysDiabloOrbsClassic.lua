@@ -106,6 +106,32 @@ local function makeFrameMovable(frame,button)
 	end)
 end
 
+local function placeStatusTrackingBars()
+	-- Anniversary/modern Classic: StatusTrackingBarManager.UpdateBarVisuals() resets
+	-- scale to ClassicScale/WrathScale on every UIParent layout, so re-apply after it.
+	if (not StatusTrackingBarManager) then
+		if (MainStatusTrackingBarContainer) then
+			MainStatusTrackingBarContainer:ClearAllPoints()
+			MainStatusTrackingBarContainer:SetScale(scaleFactor * 31 / 100)
+			MainStatusTrackingBarContainer:SetPoint("BOTTOM", UIParent, "BOTTOM", -3, 228)
+		end
+		return
+	end
+
+	StatusTrackingBarManager:ClearAllPoints()
+	StatusTrackingBarManager:SetScale(scaleFactor * 31 / 100)
+	StatusTrackingBarManager:SetPoint("BOTTOM", UIParent, "BOTTOM", -3, 228)
+
+	-- MainMenuBar dwarf strip is hidden by this addon; use standalone XP/rep border art.
+	if (StatusTrackingBarManager.barContainers) then
+		for _, container in ipairs(StatusTrackingBarManager.barContainers) do
+			if (container.UseMainMenuBarArt) then
+				container:UseMainMenuBarArt(false)
+			end
+		end
+	end
+end
+
 local function handleExpReputationBars()
 	-- Legacy frames (some clients)
 	if (MainMenuExpBar and MainMenuExpBar.IsVisible and MainMenuExpBar:IsVisible()) then
@@ -120,23 +146,14 @@ local function handleExpReputationBars()
 		return
 	end
 
-	if (ReputationWatchBar) then
+	if (ReputationWatchBar and not StatusTrackingBarManager) then
 		ReputationWatchBar:ClearAllPoints()
 		ReputationWatchBar:SetScale(scaleFactor*31/100)
 		ReputationWatchBar:SetPoint("BOTTOM", UIParent, "BOTTOM",-3,230)--235
 		return
 	end
 
-	-- Anniversary/modern Classic: status tracking bar system
-	if (StatusTrackingBarManager) then
-		StatusTrackingBarManager:ClearAllPoints()
-		StatusTrackingBarManager:SetScale(scaleFactor*31/100)
-		StatusTrackingBarManager:SetPoint("BOTTOM", UIParent, "BOTTOM",-3,228)--242
-	elseif (MainStatusTrackingBarContainer) then
-		MainStatusTrackingBarContainer:ClearAllPoints()
-		MainStatusTrackingBarContainer:SetScale(scaleFactor*31/100)
-		MainStatusTrackingBarContainer:SetPoint("BOTTOM", UIParent, "BOTTOM",-3,228)--242
-	end
+	placeStatusTrackingBars()
 end
 
 local function handleMultiBars()
@@ -582,22 +599,7 @@ local function reconfigUI()
 		StanceButton8.ignoreFramePositionManager = true
 	end
 	
-	-- XP/rep bar system varies by client/version
-	if (MainMenuExpBar) then
-		MainMenuExpBar:ClearAllPoints()
-		MainMenuExpBar:SetScale(scaleFactor*31/100)
-		MainMenuExpBar:SetPoint("BOTTOM", UIParent, "BOTTOM",-3,228)--242
-	elseif (StatusTrackingBarManager) then
-		-- Anniversary/modern Classic uses StatusTrackingBarManager + containers
-		StatusTrackingBarManager:ClearAllPoints()
-		StatusTrackingBarManager:SetScale(scaleFactor*31/100)
-		StatusTrackingBarManager:SetPoint("BOTTOM", UIParent, "BOTTOM",-3,228)--242
-	elseif (MainStatusTrackingBarContainer) then
-		-- Fallback: container exists but manager name differs
-		MainStatusTrackingBarContainer:ClearAllPoints()
-		MainStatusTrackingBarContainer:SetScale(scaleFactor*31/100)
-		MainStatusTrackingBarContainer:SetPoint("BOTTOM", UIParent, "BOTTOM",-3,228)--242
-	end
+	handleExpReputationBars()
 end
 
 local function setupOrbs()
@@ -679,25 +681,33 @@ local function updatePowerType()
 	end
 end
 
+local statusTrackingBarsHooked = false
+local multiBarsHooked = false
+
 local function hookingScripts()
-	if (ReputationWatchBar and ReputationWatchBar.HookScript) then
-		ReputationWatchBar:HookScript("OnEvent", function(self)
-			handleExpReputationBars()
-		end)
-	elseif (StatusTrackingBarManager and StatusTrackingBarManager.HookScript) then
-		StatusTrackingBarManager:HookScript("OnEvent", function(self)
-			handleExpReputationBars()
-		end)
-	elseif (MainStatusTrackingBarContainer and MainStatusTrackingBarContainer.HookScript) then
-		MainStatusTrackingBarContainer:HookScript("OnEvent", function(self)
-			handleExpReputationBars()
-		end)
+	if (not statusTrackingBarsHooked) then
+		if (StatusTrackingBarManager and StatusTrackingBarManager.UpdateBarVisuals) then
+			-- Re-apply after Blizzard resets scale/art on every layout pass
+			hooksecurefunc(StatusTrackingBarManager, "UpdateBarVisuals", placeStatusTrackingBars)
+			statusTrackingBarsHooked = true
+		elseif (ReputationWatchBar and ReputationWatchBar.HookScript) then
+			ReputationWatchBar:HookScript("OnEvent", function()
+				handleExpReputationBars()
+			end)
+			statusTrackingBarsHooked = true
+		elseif (MainStatusTrackingBarContainer and MainStatusTrackingBarContainer.HookScript) then
+			MainStatusTrackingBarContainer:HookScript("OnEvent", function()
+				handleExpReputationBars()
+			end)
+			statusTrackingBarsHooked = true
+		end
 	end
 
-	if (VerticalMultiBarsContainer and VerticalMultiBarsContainer.HookScript) then
-		VerticalMultiBarsContainer:HookScript("OnEvent", function(self)
+	if (not multiBarsHooked and VerticalMultiBarsContainer and VerticalMultiBarsContainer.HookScript) then
+		VerticalMultiBarsContainer:HookScript("OnEvent", function()
 			handleMultiBars()
 		end)
+		multiBarsHooked = true
 	end
 end
 
