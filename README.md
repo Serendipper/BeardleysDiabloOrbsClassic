@@ -18,7 +18,7 @@ A WoW UI overhaul for **WoW Classic** (including the TBC Anniversary client). Di
 All edits target the new TBC Anniversary build. Summary of what was changed:
 
 ### Addon metadata (`BeardleysDiabloOrbsClassic.toc`)
-- **Interface:** Set to `20506` for the Anniversary client.
+- **Interface:** Set to `20506` for the current TBC Anniversary client (2.5.6).
 - **Notes:** Clarified “for Classic WoW (retail)” to match the launcher/client.
 
 ### Experience & reputation bars
@@ -26,7 +26,8 @@ All edits target the new TBC Anniversary build. Summary of what was changed:
 - **Anniversary client:** Uses the unified status bar system:
   - `StatusTrackingBarManager` – primary handler for XP/rep bar.
   - `MainStatusTrackingBarContainer` – fallback when the manager name differs.
-- Positioning and scaling (including `handleExpReputationBars()`) updated so the bar sits correctly with the new art and action bar layout.
+- **Layout fix:** Blizzard’s `UpdateBarVisuals()` resets the manager scale on every UIParent layout pass. The addon hooks that and re-applies scale/position, and forces standalone XP/rep border art (MainMenuBar dwarf chrome is hidden by this UI).
+- Positioning uses `placeStatusTrackingBars()` / `handleExpReputationBars()` so the bar sits with the Diablo action bar art.
 
 ### Action bar & paging
 - **Page number:** Support for Anniversary’s `MainActionBar` and `MainActionBar.ActionBarPageNumber`; hides or zeros the page number text instead of relying on older `MainMenuBarPageNumber` / `MainMenuBarArtFrame.PageNumber`.
@@ -46,7 +47,7 @@ All edits target the new TBC Anniversary build. Summary of what was changed:
 
 ### General
 - **Frame existence checks:** All references to Blizzard frames wrapped in `if (frame)` so the addon degrades cleanly on older or differently built clients.
-- **Events & scripts:** Hooks and `OnEvent` handlers updated to use `StatusTrackingBarManager` / `MainStatusTrackingBarContainer` / `VerticalMultiBarsContainer` where appropriate.
+- **Events & scripts:** Hooks and `OnEvent` handlers updated for `StatusTrackingBarManager` / `MainStatusTrackingBarContainer` / `VerticalMultiBarsContainer` where appropriate (including `hooksecurefunc` on `UpdateBarVisuals` so XP/rep placement survives layout).
 ---
 Works now like a charm.
 
